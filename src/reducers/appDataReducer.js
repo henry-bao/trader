@@ -1,6 +1,6 @@
-import { UPDATE_APP_STATE } from '../constants/actionTypes';
-import objectAssign from 'object-assign';
-import initialState from './initialState';
+import { UPDATE_APP_STATE } from "../constants/actionTypes";
+import objectAssign from "object-assign";
+import initialState from "./initialState";
 
 export default function appDataReducer(state = initialState.app, action) {
   switch (action.type) {

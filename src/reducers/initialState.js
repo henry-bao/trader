@@ -1,24 +1,23 @@
 export default {
   profile: {
-    dp: '',
-    name: '',
+    dp: "",
+    name: "",
     address: {
-      localAddress: '',
-      city: '',
-      state: '',
-      country: '',
-      landmark: '',
-      pinCode: ''
+      localAddress: "",
+      city: "",
+      state: "",
+      country: "",
+      landmark: "",
+      pinCode: "",
     },
-    email: '',
-    phoneNo: ''
+    email: "",
+    phoneNo: "",
   },
   app: {
-    loggedIn: false
+    loggedIn: false,
   },
   myItems: [],
   allItems: [],
   individualItemData: {},
-  trades: {
-  }
+  trades: {},
 };

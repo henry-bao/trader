@@ -1,26 +1,26 @@
-import React, { Component, PropTypes } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import objectAssign from 'object-assign';
+import React, { Component, PropTypes } from "react";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import objectAssign from "object-assign";
 
-import * as profileActions from '../../actions/profileActions';
+import * as profileActions from "../../actions/profileActions";
 
-import BasicInfo from '../../components/BasicInfo/index';
-import OtherInfo from '../../components/OtherInfo/index';
-import './styles.sass';
-import loadPageProps from '../../utils/loadPageProps';
+import BasicInfo from "../../components/BasicInfo/index";
+import OtherInfo from "../../components/OtherInfo/index";
+import "./styles.sass";
+import loadPageProps from "../../utils/loadPageProps";
 
 class Profile extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      showMessage: true
+      showMessage: true,
     };
   }
 
   componentDidMount() {
-    loadPageProps('Profile - Trader');
-    Array.from(document.querySelectorAll('[data-bg]')).forEach(image => {
+    loadPageProps("Profile - Trader");
+    Array.from(document.querySelectorAll("[data-bg]")).forEach((image) => {
       image.style.backgroundImage = `url('${image.dataset.bg}')`;
     });
   }
@@ -30,20 +30,30 @@ class Profile extends Component {
   }
 
   getMessage() {
-    if (this.state.showMessage && this.props.location.query.message === "fillProfileInfo") {
+    if (
+      this.state.showMessage &&
+      this.props.location.query.message === "fillProfileInfo"
+    ) {
       return (
-        <div className="message frm" ref={node => (this.message = node)}>
-          <p>Please fill your profile informations. You info will be shared with the other user when you propose/accept trade.</p>
+        <div className="message frm" ref={(node) => (this.message = node)}>
+          <p>
+            Please fill your profile informations. You info will be shared with
+            the other user when you propose/accept trade.
+          </p>
           <span
-            onClick={
-              () => {
-                objectAssign(this.message.style,{opacity:"0",marginBottom: `-${this.message.offsetHeight}px`, zIndex: '-99'});
-                setTimeout(() => { this.setState({ showMessage: false }); }, 250);
-              }
-            }
+            onClick={() => {
+              objectAssign(this.message.style, {
+                opacity: "0",
+                marginBottom: `-${this.message.offsetHeight}px`,
+                zIndex: "-99",
+              });
+              setTimeout(() => {
+                this.setState({ showMessage: false });
+              }, 250);
+            }}
           >
             x
-            </span>
+          </span>
         </div>
       );
     }
@@ -59,7 +69,10 @@ class Profile extends Component {
           the social account which user uses to sign in.
         */}
         <BasicInfo data={this.props.profile} />
-        <OtherInfo data={this.props.profile} updateProfileState={this.updateProfileState.bind(this)} />
+        <OtherInfo
+          data={this.props.profile}
+          updateProfileState={this.updateProfileState.bind(this)}
+        />
       </div>
     );
   }
@@ -68,22 +81,19 @@ class Profile extends Component {
 Profile.propTypes = {
   profile: PropTypes.object.isRequired,
   actions: PropTypes.object.isRequired,
-  location: PropTypes.object.isRequired
+  location: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => {
   return {
-    profile: state.profileData
+    profile: state.profileData,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    actions: bindActionCreators(profileActions, dispatch)
+    actions: bindActionCreators(profileActions, dispatch),
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Profile);
+export default connect(mapStateToProps, mapDispatchToProps)(Profile);

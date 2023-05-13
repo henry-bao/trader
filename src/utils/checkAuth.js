@@ -1,18 +1,18 @@
-import fetch from 'unfetch';
+import fetch from "unfetch";
 
 export default function CheckAuth(success, failure) {
-  fetch('/isUserLoggedIn', {
-    method: 'GET',
+  fetch("/isUserLoggedIn", {
+    method: "GET",
     headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      'Cache': 'no-cache'
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Cache: "no-cache",
     },
-    credentials: 'same-origin'
+    credentials: "same-origin",
   })
-    .then(res => res.json())
-    .then(res => {
-      if (res.error === 'UNAUTHORIZED') {
+    .then((res) => res.json())
+    .then((res) => {
+      if (res.error === "UNAUTHORIZED") {
         failure();
       } else {
         success(res.notificationsCount);

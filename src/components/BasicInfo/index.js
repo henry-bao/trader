@@ -1,10 +1,10 @@
-import React, { PropTypes } from 'react';
+import React, { PropTypes } from "react";
 
-import './styles.sass';
-import userImage from '../../assets/images/user.svg';
+import "./styles.sass";
+import userImage from "../../assets/images/user.svg";
 
-const BasicInfo = ({data}) => {
-  return(
+const BasicInfo = ({ data }) => {
+  return (
     <div className="basicInfo">
       <div className="profilePic">
         <img src={data.dp ? data.dp : userImage} alt={data.name} />
@@ -17,7 +17,7 @@ const BasicInfo = ({data}) => {
 };
 
 BasicInfo.propTypes = {
-  data: PropTypes.object.isRequired
+  data: PropTypes.object.isRequired,
 };
 
 export default BasicInfo;
