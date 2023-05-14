@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import { Link } from "react-router";
+// import pica from "pica";
 import "./styles.sass";
 
 class UserItem extends Component {
@@ -8,7 +9,7 @@ class UserItem extends Component {
   }
 
   componentDidMount() {
-    this.displayWidthWiseImages();
+    // this.displayWidthWiseImages();
     // window.addEventListener('resize', () => {
     //   clearTimeout(window.reloadImages);
     //   window.reloadImages = setTimeout(() => {
@@ -25,6 +26,27 @@ class UserItem extends Component {
       image.style.backgroundImage = `url('${head}upload/${imageParams}${end}')`;
     });
   }
+  // async displayWidthWiseImages() {
+  //   Array.from(document.querySelectorAll("[data-bg]")).forEach(
+  //     async (image) => {
+  //       const { clientWidth, clientHeight } = image;
+  //       const img = new Image();
+  //       img.src = image.dataset.bg;
+
+  //       img.onload = async () => {
+  //         const canvas = this.canvas.current;
+  //         canvas.width = clientWidth;
+  //         canvas.height = clientHeight;
+
+  //         await pica().resize(img, canvas);
+
+  //         const resizedImageUrl = canvas.toDataURL();
+
+  //         image.style.backgroundImage = `url('${resizedImageUrl}')`;
+  //       };
+  //     }
+  //   );
+  // }
 
   render() {
     const { data } = this.props;

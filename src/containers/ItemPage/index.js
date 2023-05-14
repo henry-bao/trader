@@ -17,7 +17,7 @@ class ItemPage extends Component {
 
   componentDidMount() {
     loadPageProps(`${this.props.app.itemName} - Trader`);
-    this.displayWidthWiseImages();
+    // this.displayWidthWiseImages();
     // window.addEventListener('resize', () => {
     //   clearTimeout(window.reloadImages);
     //   window.reloadImages = setTimeout(() => {

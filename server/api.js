@@ -2,9 +2,11 @@ const User = require("../models/user");
 const Item = require("../models/item");
 const objectAssign = require("object-assign");
 const cloudinary = require("cloudinary");
+const { Client } = require("minio");
 const multer = require("multer");
 const path = require("path");
 const cp = require("child_process");
+const fs = require("fs");
 
 const uploadDir = path.resolve(process.cwd(), "uploads");
 
@@ -18,6 +20,17 @@ module.exports = function (app) {
     cloud_name: process.env.CAPI_CLOUD_NAME,
     api_key: process.env.CAPI_KEY,
     api_secret: process.env.CAPI_SECRET,
+  });
+
+  const minioClient = new Client({
+    endPoint: process.env.MINIO_ENDPOINT,
+    useSSL: true,
+    accessKey: process.env.MINIO_ACCESS_KEY,
+    secretKey: process.env.MINIO_SECRET_KEY,
+  });
+
+  minioClient.listBuckets().then((buckets) => {
+    console.log("buckets", buckets);
   });
 
   const isLoggedIn = (req, res, next) => {
@@ -89,10 +102,31 @@ module.exports = function (app) {
         );
         const newItem = new Item(data);
 
-        cloudinary.uploader.upload(
-          `${req.file.path}`,
-          function (result) {
-            newItem.itemPic = result.secure_url;
+        const metaData = {
+          "Content-Type": req.file.mimetype,
+          "X-Amz-Meta-Testing": 1234,
+        };
+        const fileStream = fs.createReadStream(req.file.path);
+        const fileExtension = path.extname(req.file.originalname);
+
+        minioClient.putObject(
+          process.env.MINIO_BUCKET,
+          `${date.getTime()}${fileExtension}`,
+          fileStream,
+          metaData,
+          (err) => {
+            if (err) {
+              console.error("Error happened while uploading to minio-", err);
+              return res.status(500).send({
+                error: "Some error happened while uploading image file!",
+              });
+            }
+
+            const imageUrl = `${minioClient.protocol}//${minioClient.host}:${
+              minioClient.port
+            }/${process.env.MINIO_BUCKET}/${date.getTime()}${fileExtension}`;
+
+            newItem.itemPic = imageUrl;
 
             newItem
               .save()
@@ -104,7 +138,7 @@ module.exports = function (app) {
                 res.json(item);
               })
               .catch((err) => {
-                console.error("Error happened while adding new myitem-", err);
+                console.error("Error happened while adding new item-", err);
                 res.status(500).send({
                   error: "Some error happened while adding new item!",
                 });
@@ -113,11 +147,10 @@ module.exports = function (app) {
             // clear the uploadDir
             cp.exec("rm -r " + uploadDir + "/*", (err) => {
               if (err) {
-                console.error("Error happenned while clearing uploadDir-", err);
+                console.error("Error happened while clearing uploadDir-", err);
               }
             });
-          },
-          { public_id: `${date.getTime()}` }
+          }
         );
       }
     });
@@ -131,7 +164,7 @@ module.exports = function (app) {
         "itemName",
         "itemPic",
         "itemCurrency",
-        "itemAdditionDate",
+        "itemAdditionDte",
         "itemPrice",
         "itemDescription",
         "itemTags",

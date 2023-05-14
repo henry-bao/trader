@@ -28,10 +28,10 @@ class Trades extends Component {
 
   displayWidthWiseImages() {
     Array.from(document.querySelectorAll("[data-bg]")).forEach((image) => {
-      const { clientWidth, clientHeight } = image;
-      const imageParams = `w_${clientWidth},h_${clientHeight},f_auto,q_80`;
+      // const { clientWidth, clientHeight } = image;
+      // const imageParams = `w_${clientWidth},h_${clientHeight},f_auto,q_80`;
       const [head, end] = image.dataset.bg.split("upload");
-      image.style.backgroundImage = `url('${head}upload/${imageParams}${end}')`;
+      image.style.backgroundImage = `url('${head}${end}')`;
     });
   }
 

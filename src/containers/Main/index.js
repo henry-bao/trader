@@ -8,7 +8,7 @@ import loadPageProps from "../../utils/loadPageProps";
 class Homepage extends Component {
   componentDidMount() {
     loadPageProps("Home - Trader");
-    this.displayWidthWiseImages();
+    // this.displayWidthWiseImages();
     // window.addEventListener('resize', () => {
     //   clearTimeout(window.reloadImages);
     //   window.reloadImages = setTimeout(() => {
