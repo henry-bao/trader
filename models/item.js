@@ -1,11 +1,12 @@
-'use strict';
+"use strict";
 
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const Item = new Schema({
   itemName: String,
   itemPic: String,
+  fileName: String,
   itemPrice: String,
   itemCurrency: String,
   itemDescription: String,
@@ -14,7 +15,7 @@ const Item = new Schema({
   itemOwnerId: String,
   itemAdditionDate: String,
   itemRequests: Array,
-  key: Number
+  key: String,
 });
 
-module.exports = mongoose.model('Item', Item);
+module.exports = mongoose.model("Item", Item);

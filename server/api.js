@@ -1,12 +1,12 @@
 const User = require("../models/user");
 const Item = require("../models/item");
 const objectAssign = require("object-assign");
-const cloudinary = require("cloudinary");
 const { Client } = require("minio");
 const multer = require("multer");
 const path = require("path");
 const cp = require("child_process");
 const fs = require("fs");
+const { nanoid } = require("nanoid");
 
 const uploadDir = path.resolve(process.cwd(), "uploads");
 
@@ -16,21 +16,11 @@ const upload = multer({
 }).single("itemPic");
 
 module.exports = function (app) {
-  cloudinary.config({
-    cloud_name: process.env.CAPI_CLOUD_NAME,
-    api_key: process.env.CAPI_KEY,
-    api_secret: process.env.CAPI_SECRET,
-  });
-
   const minioClient = new Client({
     endPoint: process.env.MINIO_ENDPOINT,
     useSSL: true,
     accessKey: process.env.MINIO_ACCESS_KEY,
     secretKey: process.env.MINIO_SECRET_KEY,
-  });
-
-  minioClient.listBuckets().then((buckets) => {
-    console.log("buckets", buckets);
   });
 
   const isLoggedIn = (req, res, next) => {
@@ -86,6 +76,10 @@ module.exports = function (app) {
         }
 
         const date = new Date();
+        const fileStream = fs.createReadStream(req.file.path);
+        const fileExtension = path.extname(req.file.originalname);
+        const fileKey = `${nanoid(6)}`;
+        const fileName = `${fileKey}${fileExtension}`;
         const ownerInfo = {
           itemOwnerId: req.user._id,
           itemOwner: req.user.name,
@@ -96,7 +90,8 @@ module.exports = function (app) {
           {
             itemAdditionDate: date.toDateString().slice(4),
             itemRequests: [],
-            key: date.getTime(),
+            key: fileKey,
+            fileName,
           },
           ownerInfo
         );
@@ -106,12 +101,10 @@ module.exports = function (app) {
           "Content-Type": req.file.mimetype,
           "X-Amz-Meta-Testing": 1234,
         };
-        const fileStream = fs.createReadStream(req.file.path);
-        const fileExtension = path.extname(req.file.originalname);
 
         minioClient.putObject(
           process.env.MINIO_BUCKET,
-          `${date.getTime()}${fileExtension}`,
+          fileName,
           fileStream,
           metaData,
           (err) => {
@@ -122,12 +115,7 @@ module.exports = function (app) {
               });
             }
 
-            const imageUrl = `${minioClient.protocol}//${minioClient.host}:${
-              minioClient.port
-            }/${process.env.MINIO_BUCKET}/${date.getTime()}${fileExtension}`;
-
-            newItem.itemPic = imageUrl;
-
+            newItem.itemPic = `${minioClient.protocol}//${minioClient.host}:${minioClient.port}/${process.env.MINIO_BUCKET}/${fileName}`;
             newItem
               .save()
               .then((doc) => {
@@ -168,6 +156,7 @@ module.exports = function (app) {
         "itemPrice",
         "itemDescription",
         "itemTags",
+        "fileName",
       ],
       {
         sort: { key: -1 },
@@ -185,16 +174,34 @@ module.exports = function (app) {
   });
 
   // Checks first whether user is loggedIn or not then deletes item ioi item's owner is current user
-  app.delete("/api/deleteMyItem/:key", isLoggedIn, (req, res) => {
-    Item.findOneAndRemove({ key: req.params.key, itemOwnerId: req.user._id })
+  app.delete("/api/deleteMyItem/:name", isLoggedIn, (req, res) => {
+    console.log("deleting item with name", req.params.name);
+    Item.findOneAndRemove({
+      fileName: req.params.name,
+      itemOwnerId: req.user._id,
+    })
       .then(() => {
-        res.sendStatus(200);
-        cloudinary.uploader.destroy(`${req.params.key}`);
+        minioClient.removeObject(
+          process.env.MINIO_BUCKET,
+          `${req.params.name}`,
+          function (err) {
+            if (err) {
+              console.error(
+                "Error happened while deleting item with name",
+                req.params.name,
+                "-",
+                err
+              );
+              return res.sendStatus(500);
+            }
+            res.sendStatus(200);
+          }
+        );
       })
       .catch((err) => {
         console.error(
-          "Error happened while deleting item with key",
-          req.params.key,
+          "Error happened while deleting item with name",
+          req.params.name,
           "-",
           err
         );
@@ -228,6 +235,7 @@ module.exports = function (app) {
       "itemTags",
       "itemOwner",
       "itemOwnerId",
+      "fileName",
     ])
       .then((doc) => {
         if (doc) {

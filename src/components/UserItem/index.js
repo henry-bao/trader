@@ -9,7 +9,7 @@ class UserItem extends Component {
   }
 
   componentDidMount() {
-    // this.displayWidthWiseImages();
+    this.displayWidthWiseImages();
     // window.addEventListener('resize', () => {
     //   clearTimeout(window.reloadImages);
     //   window.reloadImages = setTimeout(() => {
@@ -20,10 +20,10 @@ class UserItem extends Component {
 
   displayWidthWiseImages() {
     Array.from(document.querySelectorAll("[data-bg]")).forEach((image) => {
-      const { clientWidth, clientHeight } = image;
-      const imageParams = `w_${clientWidth},h_${clientHeight},f_auto,q_80`;
-      const [head, end] = image.dataset.bg.split("upload");
-      image.style.backgroundImage = `url('${head}upload/${imageParams}${end}')`;
+      // const { clientWidth, clientHeight } = image;
+      // const imageParams = `w_${clientWidth},h_${clientHeight},f_auto,q_80`;
+      const [head] = image.dataset.bg.split("upload");
+      image.style.backgroundImage = `url('${head}')`;
     });
   }
   // async displayWidthWiseImages() {
@@ -85,7 +85,7 @@ class UserItem extends Component {
                 <button
                   onClick={() => {
                     this.itemNode.classList.add("blacklisted");
-                    this.props.deleteItem(data.key, this.itemNode);
+                    this.props.deleteItem(data.fileName, this.itemNode);
                   }}
                 >
                   Yes
