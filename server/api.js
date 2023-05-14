@@ -12,7 +12,7 @@ const uploadDir = path.resolve(process.cwd(), "uploads");
 
 const upload = multer({
   dest: uploadDir,
-  limits: { fileSize: 512000 },
+  limits: { fileSize: 1 * 1024 * 1000 },
 }).single("itemPic");
 
 module.exports = function (app) {

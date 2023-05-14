@@ -2,6 +2,7 @@ import React from "react";
 import { Route, IndexRoute } from "react-router";
 
 import App from "./components/App/index";
+import Admin from "./components/Admin/index";
 import Main from "./containers/Main/index";
 import Profile from "./containers/Profile/index";
 import Login from "./components/Login/index";
@@ -98,6 +99,7 @@ export default function AllRoutes(dispatch) {
       <Route path="login" component={Login} onEnter={requireNoAuth} />
       <Route path="trades" component={Trades} onEnter={requireAuthAndLoad} />
       <Route path="myItems" component={MyItems} onEnter={requireAuthAndLoad} />
+      <Route path="admin" component={Admin} onEnter={requireAuthAndLoad} />
       <Route path="*" component={ErrorPage} />
     </Route>
   );

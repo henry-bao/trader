@@ -142,8 +142,8 @@ class AddItemPage extends Component {
       const errorElem = document.querySelector(".imgLoadErrors");
       errorElem.innerText = "";
 
-      if (file.size > 512000) {
-        errorElem.innerText = "Image size is greater than 500kb!";
+      if (file.size > 1 * 1024 * 1000) {
+        errorElem.innerText = `Image size is greater than 1MB!`;
       } else if (
         file.type !== "image/jpeg" &&
         file.type !== "image/png" &&
@@ -198,8 +198,7 @@ class AddItemPage extends Component {
                   Upload Item Picture
                   <br />
                   <span>
-                    Make sure image is good quality square picture and below
-                    500kb
+                    {`Make sure image is good quality square picture and below 1MB`}
                   </span>
                 </label>
                 <p className="imgLoadErrors" />
