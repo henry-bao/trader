@@ -3,10 +3,10 @@ import React, { Component, PropTypes } from "react";
 import "./styles.sass";
 
 const isCurrencyValid = (val) =>
-  val === "₹-INR" ||
-  val === "$-DOLLAR" ||
-  val === "€-EURO" ||
-  val === "£-POUND";
+  val === "$ - DOLLAR" ||
+  val === "¥ - YUAN" ||
+  val === "€ - EURO" ||
+  val === "£ - POUND";
 
 const isPriceValid = (val) => !isNaN(val) && !isNaN(parseInt(val, 10));
 
@@ -238,13 +238,14 @@ class AddItemPage extends Component {
                       name="itemCurrency"
                       type="search"
                       className="itemCurrency"
-                      placeholder="Enter Currency"
+                      value="$ - DOLLAR"
+                      // placeholder="[$] DOLLAR"
                     />
                     <datalist id="currency">
-                      <option value="₹-INR" />
-                      <option value="$-DOLLAR" />
-                      <option value="€-EURO" />
-                      <option value="£-POUND" />
+                      <option value="$ - DOLLAR" />
+                      <option value="¥ - YUAN" />
+                      <option value="€ - EURO" />
+                      <option value="£ - POUND" />
                     </datalist>
                   </div>
                 </div>

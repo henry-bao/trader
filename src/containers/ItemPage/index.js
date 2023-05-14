@@ -28,10 +28,10 @@ class ItemPage extends Component {
 
   displayWidthWiseImages() {
     Array.from(document.querySelectorAll("[data-bg]")).forEach((image) => {
-      const { clientWidth, clientHeight } = image;
-      const imageParams = `w_${clientWidth},h_${clientHeight},f_auto,q_80`;
-      const [head, end] = image.dataset.bg.split("upload");
-      image.style.backgroundImage = `url('${head}upload/${imageParams}${end}')`;
+      // const { clientWidth, clientHeight } = image;
+      // const imageParams = `w_${clientWidth},h_${clientHeight},f_auto,q_80`;
+      const [head] = image.dataset.bg.split("upload");
+      image.style.backgroundImage = `url('${head}')`;
     });
   }
 
@@ -95,7 +95,9 @@ class ItemPage extends Component {
     return (
       <div className="itemPageWrapper">
         <div className="itemImgWrapper">
-          <div className="itemImg bkdPic" data-bg={`${data.itemPic}`} />
+          <div className="itemImgContainer bkdPic" data-bg={`${data.itemPic}`}>
+            <img className="itemImg" src={data.itemPic} alt={data.itemName} />
+          </div>
         </div>
         <div className="itemInfoWrapper">
           <Link className="backLink" to="/">
