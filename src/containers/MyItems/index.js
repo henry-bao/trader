@@ -19,22 +19,6 @@ class MyItems extends Component {
 
   componentDidMount() {
     loadPageProps("My Items - Trader");
-    this.displayWidthWiseImages();
-    // window.addEventListener('resize', () => {
-    //   clearTimeout(window.reloadImages);
-    //   window.reloadImages = setTimeout(() => {
-    //     this.displayWidthWiseImages();
-    //   }, 500);
-    // });
-  }
-
-  displayWidthWiseImages() {
-    Array.from(document.querySelectorAll("[data-bg]")).forEach((image) => {
-      // const { clientWidth, clientHeight } = image;
-      // const imageParams = `w_${clientWidth},h_${clientHeight},f_auto,q_80`;
-      const [head] = image.dataset.bg.split("upload");
-      image.style.backgroundImage = `url('${head}')`;
-    });
   }
 
   closeModal() {

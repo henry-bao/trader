@@ -8,53 +8,15 @@ class UserItem extends Component {
     super(props);
   }
 
-  componentDidMount() {
-    this.displayWidthWiseImages();
-    // window.addEventListener('resize', () => {
-    //   clearTimeout(window.reloadImages);
-    //   window.reloadImages = setTimeout(() => {
-    //     this.displayWidthWiseImages();
-    //   }, 500);
-    // });
-  }
-
-  displayWidthWiseImages() {
-    Array.from(document.querySelectorAll("[data-bg]")).forEach((image) => {
-      // const { clientWidth, clientHeight } = image;
-      // const imageParams = `w_${clientWidth},h_${clientHeight},f_auto,q_80`;
-      const [head] = image.dataset.bg.split("upload");
-      image.style.backgroundImage = `url('${head}')`;
-    });
-  }
-  // async displayWidthWiseImages() {
-  //   Array.from(document.querySelectorAll("[data-bg]")).forEach(
-  //     async (image) => {
-  //       const { clientWidth, clientHeight } = image;
-  //       const img = new Image();
-  //       img.src = image.dataset.bg;
-
-  //       img.onload = async () => {
-  //         const canvas = this.canvas.current;
-  //         canvas.width = clientWidth;
-  //         canvas.height = clientHeight;
-
-  //         await pica().resize(img, canvas);
-
-  //         const resizedImageUrl = canvas.toDataURL();
-
-  //         image.style.backgroundImage = `url('${resizedImageUrl}')`;
-  //       };
-  //     }
-  //   );
-  // }
-
   render() {
     const { data } = this.props;
     return (
       <div className="uIWrapper" ref={(node) => (this.itemNode = node)}>
         <div className="upper">
           <Link to={`/item/${data.key}`}>
-            <div className="userImg bkdPic" data-bg={data.itemPic} />
+            <div className="userImgContainer bkdPic" data-bg={data.itemPic}>
+              <img className="userImg" src={data.itemPic} alt={data.itemName} />
+            </div>
           </Link>
           <div className="itemInfo">
             <h3 className="itemName">

@@ -95,7 +95,7 @@ class ItemPage extends Component {
     return (
       <div className="itemPageWrapper">
         <div className="itemImgWrapper">
-          <div className="itemImgContainer bkdPic" data-bg={`${data.itemPic}`}>
+          <div className="itemImgContainer bkdPic">
             <img className="itemImg" src={data.itemPic} alt={data.itemName} />
           </div>
         </div>
